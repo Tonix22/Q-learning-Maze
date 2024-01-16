@@ -28,7 +28,7 @@ width  = size * STEP
 height = size * STEP
 
 class GAME():
-    def __init__(self,load_weights=False):
+    def __init__(self,load_weights=False,enable_render=True):
         #internal variables
         self.run     = True
         self.episode = 0
@@ -39,6 +39,8 @@ class GAME():
         self.epsilon = 0
         self.action  = None
         self.succes_history = []
+        # Add a flag to control rendering
+        self.enable_render = enable_render
         
         # Helper classes
         # Create realistic Maze
@@ -56,17 +58,18 @@ class GAME():
             np.save('Maze.npy',self.grid)
 
         #pygame graphics engine
-        self.draw = DrawGraphics(self.grid,width,height)
+        if self.enable_render:
+            self.draw = DrawGraphics(self.grid,width,height)
 
         #init x y coordinates
         self.x_pos = MIDDLE_X # current ball center window
         self.y_pos = MIDDLE_Y+BLOCK_SIZE
     
-        #get systic clock
-        self.clock   = self.draw.getclock()
-        
-        #first draw circle
-        self.draw.circle(self.x_pos,self.y_pos)
+        if self.enable_render:
+             #get systic clock
+            self.clock   = self.draw.getclock()
+            #first draw circle
+            self.draw.circle(self.x_pos,self.y_pos)
 
     def load_window(self):
         #systick
@@ -86,7 +89,7 @@ class GAME():
         #calculate epsilon
         self.epsilon = self.ql.get_epsilon(self.episode)
             
-        if self.episode%5 == 0:
+        if self.episode%10 == 0 and self.steps == 0:
             print(self.epsilon)
         
         self.action = self.ql.take_action(self.state, self.epsilon)
@@ -106,8 +109,9 @@ class GAME():
     
     def increment_step(self):
         self.steps += 1
-        self.draw.circle(self.x_pos, self.y_pos)
-        self.draw.display_flip()
+        if self.enable_render:
+            self.draw.circle(self.x_pos, self.y_pos)
+            self.draw.display_flip()
         
     def reward_select(self):
         #collision make wall return to step before
@@ -140,8 +144,8 @@ class GAME():
 
     def main_loop(self):
         while self.run & (self.episode < max_episodes):
-            
-            self.load_window()
+            if self.enable_render:
+                self.load_window()
             self.load_epsilon()
             self.update_action()
             self.increment_step()
@@ -155,8 +159,8 @@ class GAME():
             #check next-state
             self.state = next_state
                             
-            
-        self.draw.QuitGame()
+        if self.enable_render:
+            self.draw.QuitGame()
         #save trainning
         np.save('Q_table.npy',self.ql.q_table)
         print(self.ql.q_table)
@@ -167,9 +171,9 @@ class GAME():
         plt.plot(my_array)
         plt.title('My Array Plot')
         plt.xlabel('Index')
-        plt.ylabel('Value')
+        plt.ylabel('Steps')
         plt.show()
 
 if __name__ == "__main__":
-    maze = GAME()
+    maze = GAME(load_weights=True,enable_render=True)
     maze.main_loop()
