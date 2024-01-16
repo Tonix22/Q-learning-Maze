@@ -1,0 +1,6 @@
+{
+    "fps"          : 1000,
+    "max_steps"    : 5000,
+    "max_episodes" : 1000,
+    "size"         : 15 
+}
