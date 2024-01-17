@@ -2,7 +2,7 @@ import random
 import numpy as np
 import json
 
-file_name = 'qlearning.json'
+file_name = 'config/qlearning.json'
 with open(file_name, 'r') as file:
     data = json.load(file)
     
@@ -17,11 +17,13 @@ actions = ['up', 'down', 'left', 'right']
 class Qlearning():
     def __init__(self, size):
         self.size = size
+        self.max_epsilon = max_epsilon
+        self.min_epsilon = min_epsilon
         #four posibilities manhatan distance
         self.q_table = np.zeros((size*size,4))
     
     def get_epsilon(self,episode):
-        return min_epsilon + (max_epsilon - min_epsilon) * np.exp(-decay_rate * episode)
+        return self.min_epsilon + (self.max_epsilon - self.min_epsilon) * np.exp(-decay_rate * episode)
 
     def take_action(self,state, epsilon):
         if random.random() > epsilon:

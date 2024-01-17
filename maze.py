@@ -1,11 +1,11 @@
 import numpy as np
-from KruskalMaze import RectangularKruskalMaze
-from render import DrawGraphics
-from Qlearning import Qlearning
+from MazeGenerator.KruskalMaze import RectangularKruskalMaze
+from Game.render import DrawGraphics
+from Networks.Qlearning import Qlearning
 import json
 import matplotlib.pyplot as plt
 
-file_name = 'mazeconfig.json'
+file_name = 'config/mazeconfig.json'
 with open(file_name, 'r') as file:
     data = json.load(file)
 
@@ -51,11 +51,13 @@ class GAME():
         self.ql   = Qlearning(size)
         
         if(load_weights == True):
-            self.ql.q_table = np.load('Q_table.npy')
-            self.grid       = np.load('Maze.npy')
+            self.ql.q_table = np.load('Checkpoint/Q_table.npy')
+            self.grid       = np.load('Checkpoint/Maze.npy')
+            self.ql.max_epsilon = self.ql.min_epsilon
+            
         else:
             #save maze for future recovery
-            np.save('Maze.npy',self.grid)
+            np.save('Checkpoint/Maze.npy',self.grid)
 
         #pygame graphics engine
         if self.enable_render:
@@ -144,8 +146,10 @@ class GAME():
 
     def main_loop(self):
         while self.run & (self.episode < max_episodes):
+            
             if self.enable_render:
                 self.load_window()
+            
             self.load_epsilon()
             self.update_action()
             self.increment_step()
@@ -162,7 +166,7 @@ class GAME():
         if self.enable_render:
             self.draw.QuitGame()
         #save trainning
-        np.save('Q_table.npy',self.ql.q_table)
+        np.save('Checkpoint/Q_table.npy',self.ql.q_table)
         print(self.ql.q_table)
         print(f'Wins {self.wins}')
         
@@ -175,5 +179,5 @@ class GAME():
         plt.show()
 
 if __name__ == "__main__":
-    maze = GAME(load_weights=True,enable_render=True)
+    maze = GAME(load_weights=True,enable_render=False)
     maze.main_loop()

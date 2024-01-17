@@ -9,7 +9,7 @@ import random
 import numpy as np
 from PIL import Image, ImageDraw
 
-from disjoint_set import DisjointSet
+from MazeGenerator.disjoint_set import DisjointSet
 
 
 class KruskalRectangular:
