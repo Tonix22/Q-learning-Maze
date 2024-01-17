@@ -8,9 +8,11 @@ import pprint
 import random
 import numpy as np
 from PIL import Image, ImageDraw
+from collections import deque
 
-from MazeGenerator.disjoint_set import DisjointSet
 
+#from MazeGenerator.disjoint_set import DisjointSet
+from disjoint_set import DisjointSet
 
 class KruskalRectangular:
     '''
@@ -259,15 +261,64 @@ class RectangularKruskalMaze:
         maze_array[-2, -1] = 2  # Exit
     
         return maze_array
+    
+    def solve_maze(self, maze):
+        
+        def find_entrance():
+            entrance_position = np.argwhere(maze == 3)[0]
+            return tuple(entrance_position)
 
-"""
+        def is_valid_move(row, col):
+            return 0 <= row < rows and 0 <= col < cols and maze[row, col] != 0
+
+        def dfs(row, col, path_length, current_path):
+            nonlocal shortest_path_length, shortest_path
+
+            if maze[row, col] == 2:  # Exit found
+                if path_length < shortest_path_length:
+                    shortest_path_length = path_length
+                    shortest_path = current_path.copy()
+                return
+
+            if not is_valid_move(row, col) or maze[row, col] == 4:
+                return
+
+            maze[row, col] = 4  # Mark the path
+            current_path.append((row, col))
+
+            # Explore in all four directions: up, down, left, right
+            dfs(row - 1, col, path_length + 1, current_path)  # Up
+            dfs(row + 1, col, path_length + 1, current_path)  # Down
+            dfs(row, col - 1, path_length + 1, current_path)  # Left
+            dfs(row, col + 1, path_length + 1, current_path)  # Right
+
+            maze[row, col] = 0  # Unmark the path
+            current_path.pop()
+
+        self.maze = np.copy(maze)
+        rows, cols = maze.shape
+        shortest_path_length = float('inf')
+        shortest_path = []
+
+        entrance = find_entrance()
+        dfs(entrance[0], entrance[1], 0, [])
+
+        # Mark the shortest path in the maze
+        for row, col in shortest_path:
+            self.maze[row, col] = 4
+
+        return self.maze
+
+
+
 if __name__ == '__main__':
-    row_size = 20
+    row_size    = 20
     side_length = 20
 
     algo = RectangularKruskalMaze(row_size, side_length)
+    maze = algo.create_maze_array()
+    maze = algo.solve_maze(maze) 
+    np.save('Dataset/maze.npy',maze)
+    #maze_image_path = f'images/{math.floor(time.time())}.png'
 
-    maze_image_path = f'images/{math.floor(time.time())}.png'
-
-    algo.create_maze_image(maze_image_path)
-"""
+    #algo.create_maze_image(maze_image_path)
