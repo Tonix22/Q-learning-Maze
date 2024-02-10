@@ -179,5 +179,5 @@ class GAME():
         plt.show()
 
 if __name__ == "__main__":
-    maze = GAME(load_weights=True,enable_render=False)
+    maze = GAME(load_weights=False,enable_render=True)
     maze.main_loop()

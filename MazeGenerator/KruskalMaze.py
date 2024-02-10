@@ -11,8 +11,8 @@ from PIL import Image, ImageDraw
 from collections import deque
 
 
-#from MazeGenerator.disjoint_set import DisjointSet
-from disjoint_set import DisjointSet
+from MazeGenerator.disjoint_set import DisjointSet
+#from disjoint_set import DisjointSet
 
 class KruskalRectangular:
     '''

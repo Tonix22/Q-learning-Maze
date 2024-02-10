@@ -25,4 +25,5 @@ ax.grid(which='both', linestyle='-', linewidth=1)
 ax.set_xticks(np.arange(-0.5, len(solved_maze), 1), minor=True)
 ax.set_yticks(np.arange(-0.5, len(solved_maze[0]), 1), minor=True)
 
-plt.savefig('mazesolved.png')
+#plt.savefig('mazesolved.png')
+plt.show()
