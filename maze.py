@@ -1,7 +1,7 @@
 import numpy as np
 from MazeGenerator.KruskalMaze import RectangularKruskalMaze
 from Game.render import DrawGraphics
-from Networks.Qlearning import Qlearning
+from Networks.QlearningMaze import QlearningMaze
 import json
 import matplotlib.pyplot as plt
 
@@ -50,7 +50,7 @@ class GAME():
         self.grid = algo.create_maze_array() #return as np
         
         #Q-Learning class
-        self.ql   = Qlearning(size)
+        self.ql   = QlearningMaze(size)
         
         if(load_weights == True):
             self.ql.q_table = np.load('Checkpoint/Q_table.npy')

@@ -14,7 +14,7 @@ gamma       = data['gamma']
 
 actions = ['up', 'down', 'left', 'right']
 
-class Qlearning():
+class QlearningMaze():
     def __init__(self, size):
         self.size = size
         self.max_epsilon = max_epsilon
