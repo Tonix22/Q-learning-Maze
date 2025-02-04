@@ -22,6 +22,8 @@ fps          = data['fps']
 max_steps    = data['max_steps']
 max_episodes = data['max_episodes']
 size         = data['size'] # odd number only
+load_weights = data['load_weights']
+enable_render = data['enable_render']
 
 maze_param = (size-1)//2
 width  = size * STEP
@@ -132,6 +134,7 @@ class GAME():
             print("WIN!!!")
             print(f"Episode {self.episode} finished after {self.steps} steps")
             self.succes_history.append(self.steps)
+            self.steps = 0
             
         else:
             self.reward = 0
@@ -179,5 +182,5 @@ class GAME():
         plt.show()
 
 if __name__ == "__main__":
-    maze = GAME(load_weights=False,enable_render=True)
+    maze = GAME(load_weights,enable_render)
     maze.main_loop()
