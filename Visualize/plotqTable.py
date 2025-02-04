@@ -4,8 +4,8 @@ import matplotlib.colors as mcolors
 import seaborn as sns
 
 # Load the maze and the Q-table
-maze = np.load('Maze.npy')
-qtable = np.load('Q_table.npy')
+maze = np.load('/home/tonix/Documents/Doctorado/Clases/Q-learning-Maze/Checkpoint/Maze.npy')
+qtable = np.load('/home/tonix/Documents/Doctorado/Clases/Q-learning-Maze/Checkpoint/Q_table.npy')
 
 # Reshape Q-table for plotting
 size = int(np.sqrt(qtable.shape[0]))
